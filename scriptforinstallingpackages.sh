@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+
 # Function to install packages using yum
 install_packages() {
     if rpm -q $1 &> /dev/null; then
@@ -23,11 +23,13 @@ remove_packages() {
 # Main loop
 while true; do
     # Menu for the user
-    echo "Select an option: "
+    echo "Select a package to install: "
     echo "1) Install AWS CLI"
     echo "2) Install Git"
     echo "3) Install Node.js"
     echo "4) Install Docker"
+    echo "5) Install Tree"
+    echo "6) Install all available packages"
     echo "*) Exit"
 
     # Read user input
@@ -47,6 +49,12 @@ while true; do
         4)
             install_packages "docker"
             ;;
+        5)
+            install_packages "tree"
+            ;;
+        6)
+            sudo yum install -y $(yum list available | awk '{print $1}' | grep -v '^$' | sort)
+            ;;
         *)
             echo "Exiting script..."
             exit 0
@@ -55,7 +63,6 @@ while true; do
 
     # Ask user if they want to delete or install another package
     read -p "Do you want to (i)nstall another package, (r)emove a package, or (e)xit? " action
-
     case $action in
         i)
             # Continue the loop to install another package
